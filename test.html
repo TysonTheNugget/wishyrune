@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wishy Rune Tracker</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f7f7fc;
+      padding: 20px;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      margin: 8px;
+      width: 300px;
+      font-size: 16px;
+    }
+    #output {
+      margin-top: 20px;
+      text-align: left;
+      white-space: pre-line;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>Wishy Rune Tracker</h1>
+
+  <input id="btcAddress" placeholder="Enter BTC address" value="bc1..."><br>
+  <input id="runeName" placeholder="Enter Rune name" value="DOG GO TO THE MOON"><br>
+  <button onclick="fetchRune()">Analyze Rune</button>
+
+  <div id="output"></div>
+
+  <script>
+    async function fetchRune() {
+      const address = document.getElementById("btcAddress").value.trim();
+      const rune = document.getElementById("runeName").value.trim();
+
+      if (!address || !rune) {
+        alert("Please fill in both fields.");
+        return;
+      }
+
+      const output = document.getElementById("output");
+      output.innerText = "Fetching data...";
+
+      try {
+        const res = await fetch(`https://wishyrune.onrender.com/analyze?address=${address}&rune=${encodeURIComponent(rune)}`);
+        const data = await res.json();
+
+        if (data.error) {
+          output.innerText = "❌ Error: " + data.error;
+        } else {
+          output.innerText = `
+Rune: ${data.rune}
+Total Units Received: ${data.units_received.toFixed(5)}
+Total Units Sold: ${data.units_sold.toFixed(5)}
+Total BTC Spent: ${data.btc_spent.toFixed(8)} BTC
+Total BTC Earned: ${data.btc_earned.toFixed(8)} BTC
+`;
+        }
+      } catch (err) {
+        output.innerText = "❌ Request failed: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
