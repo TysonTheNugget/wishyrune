@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # 🧠 Enable CORS
 import requests
 import json
 from decimal import Decimal
 import os
 
 app = Flask(__name__)
+CORS(app)  # 🛡️ Allow cross-origin requests (for frontend use)
 
 API_KEY = "6ed7b13e-063c-42fc-a27b-9bd87f8f7219"
 BASE_URL = "https://api-mainnet.magiceden.dev/v2/ord/btc/runes"
